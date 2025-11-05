@@ -1,0 +1,61 @@
+#include "ParkedCar.h"
+#include "ParkingMeter.h"
+#include "PoliceOfficer.h"
+#include "ParkingTicket.h"
+#include <iostream>
+
+int main() {
+    std::cout << "Parking Ticket Simulator\n\n";
+
+    // Scenario 1: parked legally
+    ParkedCar car1("Toyota","Camry","Red","XYZ123",30);
+    ParkingMeter meter1(40);
+    PoliceOfficer office1("John Doe", "5678");
+    if (office1.isExpired(car1, meter1)) {
+        ParkingTicket t = office1.issueTicket(car1, meter1);
+        t.display();
+    } else {
+        std::cout << "Scenario 1: Car is parked legally. No ticket.\n";
+    }
+
+    // Scenario 2: 10 minutes over -> $25
+    ParkedCar car2("Honda","Accord","Blue","ABC987",70);
+    ParkingMeter meter2(60);
+    PoliceOfficer office2("Jane Smith", "1234");
+    if (office2.isExpired(car2, meter2)) {
+        ParkingTicket t = office2.issueTicket(car2, meter2);
+        t.display();
+    }
+
+    // Scenario 3: 130 minutes over -> 2 hours and 10 minutes => $25 + $10 + $10 = $45
+    ParkedCar car3("Ford","Mustang","Black","LMN456",190);
+    ParkingMeter meter3(60);
+    PoliceOfficer office3("James Brown", "4321");
+    if (office3.isExpired(car3, meter3)) {
+        ParkingTicket t = office3.issueTicket(car3, meter3);
+        t.display();
+    }
+
+    // Scenario 4: multiple cars
+    std::cout << "\nScenario 4: multiple cars check\n";
+    ParkedCar cars[] = {
+        ParkedCar("Nissan","Altima","White","AAA111",50),
+        ParkedCar("Chevy","Impala","Grey","BBB222",75),
+        ParkedCar("BMW","328i","Blue","CCC333",180)
+    };
+    ParkingMeter meters[] = { ParkingMeter(60), ParkingMeter(60), ParkingMeter(120) };
+    PoliceOfficer officer("Mark Smith", "B123456");
+
+    for (int i = 0; i < 3; ++i) {
+        std::cout << "\nInspecting car " << (i+1) << ":\n";
+        cars[i].display();
+        if (officer.isExpired(cars[i], meters[i])) {
+            ParkingTicket t = officer.issueTicket(cars[i], meters[i]);
+            t.display();
+        } else {
+            std::cout << "No violation for this vehicle.\n";
+        }
+    }
+
+    return 0;
+}
